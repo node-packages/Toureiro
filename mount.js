@@ -15,6 +15,6 @@ app.use(bodyParser.json());
 
 app.use('/toureiro', toureiro);
 
-var server = app.listen(3000, function() {
+app.listen(3000, function () {
   console.log('Server is now listening at port 3000...');
 });
