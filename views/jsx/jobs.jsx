@@ -232,7 +232,7 @@ var ToureiroJobs = React.createClass({
     var state = {
       jobs: [],
       page: 0,
-      limit: 1,
+      limit: 15,
       total: 0
     };
     return state;
