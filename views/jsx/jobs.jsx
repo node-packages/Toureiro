@@ -105,14 +105,14 @@ var Job = React.createClass({
           }
           <p className="job-creation">Created At:
             <br/>
-            {moment(job.timestamp).format('MM/DD/YYYY hh:mm:ssA')}
+            {moment(job.timestamp).format('MMM Do YYYY, hh:mm:ss a')}
           </p>
           {
             job.state === 'delayed' ? (
               <div>
                 <p className="job-delay">Delayed Until:
                   <br/>
-                  {moment(job.timestamp + job.delay).format('MM/DD/YYYY hh:mm:ssA')}
+                  {moment(job.timestamp + job.delay).format('MMM Do YYYY, hh:mm:ss a')}
                 </p>
                 {
                   _this.props.enablePromote && !_this.props.readonly ? (
@@ -232,7 +232,7 @@ var ToureiroJobs = React.createClass({
     var state = {
       jobs: [],
       page: 0,
-      limit: 15,
+      limit: 1,
       total: 0
     };
     return state;
