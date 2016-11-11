@@ -7,17 +7,17 @@ var Pagination = require('./pagination.jsx');
 
 var Job = React.createClass({
 
-  componentDidMount: function() {
+  componentDidMount: function () {
     hljs.highlightBlock(this.refs.code.getDOMNode());
   },
 
-  promoteJob: function() {
+  promoteJob: function () {
     var _this = this;
     if (confirm('Are you sure you want to promote this job?')) {
       $.post('job/promote/', {
         queue: this.props.queue,
         id: this.props.job.id
-      }, function(response) {
+      }, function (response) {
         if (response.status === 'OK') {
           if (_this.props.onJobUpdate) {
             _this.props.onJobUpdate();
@@ -30,13 +30,13 @@ var Job = React.createClass({
     }
   },
 
-  removeJob: function() {
+  removeJob: function () {
     var _this = this;
     if (confirm('Are you sure you want to remove job ' + this.props.job.id + '? This action is not reversible.')) {
       $.post('job/remove/', {
         queue: this.props.queue,
         id: this.props.job.id
-      }, function(response) {
+      }, function (response) {
         if (response.status === 'OK') {
           if (_this.props.onJobUpdate) {
             _this.props.onJobUpdate();
@@ -49,13 +49,13 @@ var Job = React.createClass({
     }
   },
 
-  rerunJob: function() {
+  rerunJob: function () {
     var _this = this;
     if (confirm('Are you sure you want to rerun job ' + this.props.job.id + '? This will create another instance of the job with the same params and will be executed immediately.')) {
       $.post('job/rerun/', {
         queue: this.props.queue,
         id: this.props.job.id
-      }, function(response) {
+      }, function (response) {
         if (response.status === 'OK') {
           if (_this.props.onJobUpdate) {
             _this.props.onJobUpdate();
@@ -68,7 +68,7 @@ var Job = React.createClass({
     }
   },
 
-  render: function() {
+  render: function () {
     var _this = this;
     var job = this.props.job;
     try {
@@ -81,10 +81,13 @@ var Job = React.createClass({
     } catch (err) {
       console.log(err);
     }
+
+    var jobId = job.id || job.opts.jobId;
+
     return (
-      <div className="job clearfix" key={job.id}>
+      <div className="job clearfix" key={jobId}>
         <div className="job-details">
-          <h4 className="job-id">Job ID: {job.id}</h4>
+          <h4 className="job-id">Job ID: {jobId}</h4>
           <br />
           {
             this.props.showState ? (
@@ -113,7 +116,8 @@ var Job = React.createClass({
                 </p>
                 {
                   _this.props.enablePromote && !_this.props.readonly ? (
-                    <button className="job-promote btn btn-embossed btn-warning" onClick={_this.promoteJob}>Promote</button>
+                    <button className="job-promote btn btn-embossed btn-warning" onClick={_this.promoteJob}>
+                      Promote</button>
                   ) : ''
                 }
                 <br />
@@ -139,7 +143,7 @@ var Job = React.createClass({
           <br />
         </div>
         <pre className="job-code">
-          <code ref="code" dangerouslySetInnerHTML={{__html: JSON.stringify(job, null, 2)}} />
+          <code ref="code" dangerouslySetInnerHTML={{ __html: JSON.stringify(job, null, 2) }}/>
         </pre>
       </div>
     );
@@ -149,7 +153,7 @@ var Job = React.createClass({
 
 var JobDetails = React.createClass({
 
-  getInitialState: function() {
+  getInitialState: function () {
     var state = {
       id: undefined,
       job: undefined
@@ -157,20 +161,20 @@ var JobDetails = React.createClass({
     return state;
   },
 
-  handleJobSearch: function(event) {
+  handleJobSearch: function (event) {
     if (event.which === 13) {
       this.getJobById();
     }
   },
 
-  getJobById: function() {
+  getJobById: function () {
     var _this = this;
     var id = $(this.refs.idField.getDOMNode()).val()
     if (id) {
       $.get('/job/', {
         queue: this.props.queue,
         id: id
-      }, function(response) {
+      }, function (response) {
         if (response.status === 'OK') {
           _this.setState({
             id: id,
@@ -192,14 +196,14 @@ var JobDetails = React.createClass({
     }
   },
 
-  render: function() {
+  render: function () {
     return (
       <div className="toureiro-jobs">
         <h4 className="header">Job Details</h4>
         <div>
           <label>Find Job by ID: </label>
           <div className="input-group">
-            <input ref="idField" className="form-control" type="text" name="id" onKeyUp={this.handleJobSearch} />
+            <input ref="idField" className="form-control" type="text" name="id" onKeyUp={this.handleJobSearch}/>
             <span className="input-group-btn">
               <button className="btn btn-success" onClick={this.getJobById}>Go</button>
             </span>
@@ -208,7 +212,8 @@ var JobDetails = React.createClass({
         <br />
         {
           (this.state.job) ? (
-            <Job job={this.state.job} queue={this.props.queue} enablePromote={true} showState={true} readonly={this.props.readonly} />
+            <Job job={this.state.job} queue={this.props.queue} enablePromote={true} showState={true}
+                 readonly={this.props.readonly}/>
           ) : (
             (this.state.id) ? (
               <span>Job is not found.</span>
@@ -223,17 +228,17 @@ var JobDetails = React.createClass({
 
 var ToureiroJobs = React.createClass({
 
-  getInitialState: function() {
+  getInitialState: function () {
     var state = {
       jobs: [],
       page: 0,
-      limit: 15,
+      limit: 1,
       total: 0
     };
     return state;
   },
 
-  componentDidUpdate: function() {
+  componentDidUpdate: function () {
     if (this.state.page !== this.refs.pagination.state.page) {
       this.refs.pagination.setState({
         page: this.state.page
@@ -241,21 +246,21 @@ var ToureiroJobs = React.createClass({
     }
   },
 
-  fetchJobs: function() {
+  fetchJobs: function () {
     var _this = this;
     this.setState({
       jobs: []
-    }, function() {
+    }, function () {
       $.get('job/fetch/' + _this.props.category, {
         queue: _this.props.queue,
         page: _this.state.page,
         limit: _this.state.limit
-      }, function(response) {
+      }, function (response) {
         if (response.status === 'OK') {
           if (response.jobs.length === 0 && response.total > 0) {
             _this.setState({
               page: 0
-            }, function() {
+            }, function () {
               _this.fetchJobs();
             });
           } else {
@@ -271,34 +276,52 @@ var ToureiroJobs = React.createClass({
     });
   },
 
-  handlePageChange: function(page) {
+  handlePageChange: function (page) {
     var _this = this;
     this.setState({
       page: page
-    }, function() {
+    }, function () {
       _this.fetchJobs();
     });
   },
 
-  handleJobUpdate: function() {
+  handleJobUpdate: function () {
     this.fetchJobs();
   },
 
-  render: function() {
+  getJobId: function (job) {
+    // get job id
+    var opts;
+    try {
+      if (typeof job.opts === 'string') {
+        opts = JSON.parse(job.opts);
+      } else {
+        opts = job.opts;
+      }
+    } catch (err) {
+      console.error(err);
+    }
+
+    return job.id || opts.jobId;
+  },
+
+  render: function () {
     var _this = this;
     return (
       <div className="toureiro-jobs">
         <h4 className="header">{this.props.category[0].toUpperCase() + this.props.category.slice(1)} Jobs</h4>
         <div ref="jobs">
           {
-            this.state.jobs.map(function(job) {
+            this.state.jobs.map(function (job) {
               return (
-                <Job key={job.id} job={job} queue={_this.props.queue} onJobUpdate={_this.handleJobUpdate} enablePromote={_this.props.category === 'delayed'} readonly={_this.props.readonly} />
+                <Job key={_this.getJobId(job)} job={job} queue={_this.props.queue} onJobUpdate={_this.handleJobUpdate}
+                     enablePromote={_this.props.category === 'delayed'} readonly={_this.props.readonly}/>
               );
             })
           }
         </div>
-        <Pagination ref="pagination" total={Math.ceil(this.state.total / this.state.limit)} onPageChange={this.handlePageChange} />
+        <Pagination ref="pagination" total={Math.ceil(this.state.total / this.state.limit)}
+                    onPageChange={this.handlePageChange}/>
       </div>
     );
   }
