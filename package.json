@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/evanhuang8/Toureiro#readme",
   "dependencies": {
-    "@conscia/taurus": "3.0.0-rc.5",
+    "@conscia/taurus": "3.0.0-rc.7",
     "bluebird": "3.5.x",
     "body-parser": "1.17.x",
     "bootstrap": "3.3.x",
