@@ -3,7 +3,7 @@
 
 A graphical monitoring interface for the distributed job queue [bull](https://github.com/OptimalBits/bull) built using `express` and `react`. Toureiro provides simple monitoring features as well as the ability to promote delayed jobs directly. **This version only supports bull v3**
 
-> **NB : This fork only supports bull 3.x & above. There is no**
+> **NB : This fork only supports bull 3.x & above.**
 
 ## Screenshots
 
