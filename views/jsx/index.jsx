@@ -1,52 +1,53 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
-var $ = require('jquery');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const $ = require('jquery');
 
-var Sidebar = require('./sidebar.jsx');
-var Jobs = require('./jobs.jsx').Jobs;
-var JobDetails = require('./jobs.jsx').JobDetails;
-var createReactClass = require('create-react-class');
+const Sidebar = require('./sidebar.jsx');
+const Jobs = require('./jobs.jsx').Jobs;
+const JobDetails = require('./jobs.jsx').JobDetails;
 
-var Toureiro = createReactClass({
-
-  getInitialState: function () {
-    var state = {
+class Toureiro extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       queue: undefined,
       category: undefined,
       readonly: true
     };
-    return state;
-  },
+    this.handleQueueChange = this.handleQueueChange.bind(this);
+    this.handleCategoryChange = this.handleCategoryChange.bind(this);
+    this.handleReadonlyChange = this.handleReadonlyChange.bind(this);
+  }
 
-  handleQueueChange: function (queue) {
+  handleQueueChange (queue) {
     this.setState({
       queue: queue
     });
-  },
+  };
 
-  handleCategoryChange: function (category) {
-    var _this = this;
+  handleCategoryChange (category) {
+    const _this = this;
     this.setState({
       category: category
-    }, function () {
+    }, () => {
       if (_this.refs.jobs) {
         _this.refs.jobs.setState({
           page: 0
-        }, function () {
+        }, () => {
           _this.refs.jobs.fetchJobs();
         });
       }
     });
-  },
+  };
 
-  handleReadonlyChange : function () {
+  handleReadonlyChange () {
     this.setState({
       readonly: !this.state.readonly
     });
-  },
+  };
 
-  render: function () {
-    var _this = this;
+  render () {
+    const _this = this;
     return (
       <div id="toureiro">
         <Sidebar onQueueChange={this.handleQueueChange} onCategoryChange={this.handleCategoryChange}
@@ -66,6 +67,6 @@ var Toureiro = createReactClass({
       </div>
     );
   }
-});
+};
 
 ReactDOM.render(<Toureiro />, $('#toureiro-wrapper')[0]);

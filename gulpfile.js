@@ -1,6 +1,6 @@
 const browserify = require('browserify');
 const gulp = require('gulp');
-const reactify = require('reactify');
+const babelify = require('babelify');
 const buffer = require('vinyl-buffer');
 const cssmin = require('gulp-cssmin');
 const less = require('gulp-less');
@@ -36,7 +36,9 @@ gulp.task('buildBundle', function () {
   const bundler = browserify({
     entries: './views/jsx/index.jsx',
     debug: true,
-    transform: [reactify]
+    transform: babelify.configure({
+      presets: ['es2015', 'react']
+    }),
   });
   return bundler.bundle()
     .pipe(source('app.js'))
@@ -51,7 +53,9 @@ function watchBundle () {
   const watcher = watchify(browserify({
     entries: './views/jsx/index.jsx',
     debug: true,
-    transform: [reactify],
+    transform: babelify.configure({
+      presets: ['es2015', 'react']
+    }),
     cache: {},
     packageCache: {},
     fullPaths: true

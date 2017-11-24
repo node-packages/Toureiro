@@ -1,18 +1,17 @@
-var React = require('react');
-var classnames = require('classnames');
-var createReactClass = require('create-react-class');
+const React = require('react');
+const classnames = require('classnames');
 
-var Pagination = createReactClass({
+class Pagination extends React.Component {
 
-  getInitialState: function () {
-    var state = {
+  constructor (props) {
+    super(props);
+    this.state = {
       page: 0
     };
-    return state;
-  },
+  }
 
-  changePage: function (page, event) {
-    var _this = this;
+  changePage (page, event) {
+    const _this = this;
     this.setState({
       page: page
     }, function () {
@@ -20,10 +19,10 @@ var Pagination = createReactClass({
         _this.props.onPageChange(page);
       }
     });
-  },
+  };
 
-  stepPage: function (operand, event) {
-    var page = this.state.page + operand;
+  stepPage (operand, event) {
+    let page = this.state.page + operand;
     if (page < 0) {
       page = 0;
     } else if (page >= this.props.total) {
@@ -32,7 +31,7 @@ var Pagination = createReactClass({
         page = 0;
       }
     }
-    var _this = this;
+    const _this = this;
     this.setState({
       page: page
     }, function () {
@@ -40,12 +39,12 @@ var Pagination = createReactClass({
         _this.props.onPageChange(page);
       }
     });
-  },
+  };
 
-  render: function () {
-    var _this = this;
-    var pages = [];
-    for (var i = 0; i < this.props.total; i++) {
+  render () {
+    const _this = this;
+    const pages = [];
+    for (let i = 0; i < this.props.total; i++) {
       pages.push(i);
     }
     if (pages.length === 0) {
@@ -59,7 +58,7 @@ var Pagination = createReactClass({
           </li>
           {
             pages.map(function (page) {
-              var pageClasses = classnames({
+              const pageClasses = classnames({
                 active: _this.state.page === page
               });
               if ([0, _this.props.total - 1, _this.state.page, _this.state.page - 1, _this.state.page + 1].indexOf(page) !== -1) {
@@ -84,8 +83,7 @@ var Pagination = createReactClass({
         </ul>
       </div>
     );
-  }
-
-});
+  };
+}
 
 module.exports = Pagination;
