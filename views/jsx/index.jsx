@@ -1,14 +1,13 @@
 var React = require('react');
-var LinkedStateMixin = require('react/addons').addons.LinkedStateMixin;
+var ReactDOM = require('react-dom');
 var $ = require('jquery');
 
 var Sidebar = require('./sidebar.jsx');
 var Jobs = require('./jobs.jsx').Jobs;
 var JobDetails = require('./jobs.jsx').JobDetails;
+var createReactClass = require('create-react-class');
 
-var Toureiro = React.createClass({
-
-  mixins: [LinkedStateMixin],
+var Toureiro = createReactClass({
 
   getInitialState: function () {
     var state = {
@@ -40,12 +39,18 @@ var Toureiro = React.createClass({
     });
   },
 
+  handleReadonlyChange : function () {
+    this.setState({
+      readonly: !this.state.readonly
+    });
+  },
+
   render: function () {
     var _this = this;
     return (
       <div id="toureiro">
         <Sidebar onQueueChange={this.handleQueueChange} onCategoryChange={this.handleCategoryChange}
-                 readonlyLink={this.linkState('readonly')}/>
+                 onReadonlyChange={this.handleReadonlyChange}/>
         <div id="toureiro-canvas">
           {
             (_this.state.queue && _this.state.category) ? (
@@ -63,4 +68,4 @@ var Toureiro = React.createClass({
   }
 });
 
-React.render(<Toureiro />, $('#toureiro-wrapper')[0]);
+ReactDOM.render(<Toureiro />, $('#toureiro-wrapper')[0]);

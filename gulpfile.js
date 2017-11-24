@@ -1,20 +1,19 @@
-var browserify = require('browserify');
-var gulp = require('gulp');
-var reactify = require('reactify');
-var buffer = require('vinyl-buffer');
-var cssmin = require('gulp-cssmin');
-var ignore =require('gulp-ignore');
-var less = require('gulp-less');
-var livereload = require('gulp-livereload');
-var notify = require('gulp-notify');
-var shell = require('gulp-shell');
-var source = require('vinyl-source-stream');
-var sourcemaps = require('gulp-sourcemaps');
-var uglify = require('gulp-uglify');
-var gutil = require('gulp-util');
-var watchify = require('watchify');
+const browserify = require('browserify');
+const gulp = require('gulp');
+const reactify = require('reactify');
+const buffer = require('vinyl-buffer');
+const cssmin = require('gulp-cssmin');
+const less = require('gulp-less');
+const livereload = require('gulp-livereload');
+const notify = require('gulp-notify');
+const shell = require('gulp-shell');
+const source = require('vinyl-source-stream');
+const sourcemaps = require('gulp-sourcemaps');
+const uglify = require('gulp-uglify');
+const gutil = require('gulp-util');
+const watchify = require('watchify');
 
-var runLess = function() {
+const runLess = function () {
   return gulp
     .src('./views/css/toureiro.less')
     .pipe(less())
@@ -22,19 +21,19 @@ var runLess = function() {
     .pipe(livereload());
 };
 
-var runLessMin = function() {
+const runLessMin = function () {
   return gulp
     .src('./views/css/toureiro.less')
     .pipe(less())
     .pipe(cssmin())
     .pipe(gulp.dest('./public/css'));
-}
+};
 
 gulp.task('less', runLess);
 gulp.task('lessMin', runLessMin);
 
-gulp.task('buildBundle', function() {
-  var bundler = browserify({
+gulp.task('buildBundle', function () {
+  const bundler = browserify({
     entries: './views/jsx/index.jsx',
     debug: true,
     transform: [reactify]
@@ -42,14 +41,14 @@ gulp.task('buildBundle', function() {
   return bundler.bundle()
     .pipe(source('app.js'))
     .pipe(buffer())
-    .pipe(sourcemaps.init({loadMaps: true}))
+    .pipe(sourcemaps.init({ loadMaps: true }))
     .pipe(uglify().on('error', gutil.log))
     .pipe(sourcemaps.write())
     .pipe(gulp.dest('./public/js/'));
 });
 
-function watchBundle() {
-  var watcher = watchify(browserify({
+function watchBundle () {
+  const watcher = watchify(browserify({
     entries: './views/jsx/index.jsx',
     debug: true,
     transform: [reactify],
@@ -57,15 +56,15 @@ function watchBundle() {
     packageCache: {},
     fullPaths: true
   }));
-  watcher.on('update', function() {
+  watcher.on('update', function () {
     bundle(watcher);
   });
   watcher.on('log', gutil.log);
   bundle(watcher);
 }
 
-function bundle(bundler) {
-  var start = Date.now();
+function bundle (bundler) {
+  const start = Date.now();
   console.log('Bundling...');
   bundler
     .bundle()
@@ -74,20 +73,20 @@ function bundle(bundler) {
     .pipe(buffer())
     .pipe(gulp.dest('./public/dev/js/'))
     .pipe(livereload())
-    .pipe(notify(function() {
+    .pipe(notify(function () {
       console.log('Bundled! Process took', (Date.now() - start) + 'ms');
     }));
 }
 
 gulp.task('watchBundle', watchBundle);
-gulp.task('watchLess', function() {
+gulp.task('watchLess', function () {
   runLess();
   gulp.watch('./views/css/**/*.less', ['less']);
 });
 
 gulp.task('watch', ['watchBundle', 'watchLess']);
 
-gulp.task('livereload', function() {
+gulp.task('livereload', function () {
   livereload.listen();
 });
 

@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-var minimist = require('minimist');
-var toureiro = require('../lib/toureiro');
+const minimist = require('minimist');
+const toureiro = require('../lib/toureiro');
 
-var argv = minimist(process.argv.slice(2));
+const argv = minimist(process.argv.slice(2));
 
 if (argv.h || argv.help) {
   console.log('Usage: toureiro [port]');
@@ -16,28 +16,28 @@ if (argv.h || argv.help) {
   process.exit(0);
 }
 
-var port = 3000;
+let port = 3000;
 if (argv._.length > 0 && !isNaN(parseInt(argv._[0]))) {
   port = parseInt(argv._[0]);
 }
-var redisHost = '127.0.0.1';
+let redisHost = '127.0.0.1';
 if (argv.rh) {
   redisHost = argv.rh;
 }
-var redisPort = 6379;
+let redisPort = 6379;
 if (argv.rp && !isNaN(parseInt(argv.rp))) {
   redisPort = argv.rp;
 }
-var redisDB = 0;
+let redisDB = 0;
 if (argv.rdb && !isNaN(parseInt(argv.rdb))) {
   redisDB = argv.rdb;
 }
-var redisPass = null;
+let redisPass = null;
 if (argv.pass) {
   redisPass = argv.pass;
 }
 
-var app = toureiro({
+const app = toureiro({
   redis: {
     host: redisHost,
     port: redisPort,
@@ -45,6 +45,7 @@ var app = toureiro({
     db: redisDB
   }
 });
-var server = app.listen(port, function() {
+
+app.listen(port, function () {
   console.log('Toureiro is now listening at port', port, '...');
 });

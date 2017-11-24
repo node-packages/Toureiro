@@ -1,7 +1,8 @@
 var React = require('react');
 var classnames = require('classnames');
+var createReactClass = require('create-react-class');
 
-var Pagination = React.createClass({
+var Pagination = createReactClass({
 
   getInitialState: function () {
     var state = {

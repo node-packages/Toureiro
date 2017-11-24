@@ -1,9 +1,10 @@
-var app = require('./lib/toureiro')({
+const app = require('./lib/toureiro')({
   development: true,
   redis: {
-    // db: 1
+    db: 7
   }
 });
-var server = app.listen(3000, function() {
+
+app.listen(3000, function () {
   console.log('Toureiro is now listening at port 3000...');
 });

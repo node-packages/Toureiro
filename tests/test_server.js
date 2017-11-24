@@ -1,30 +1,36 @@
-var _ = require('lodash');
-var bull = require('bull');
-var chai = require('chai');
-var expect = chai.expect;
-var Promise = require('bluebird');
-var Redis = require('ioredis');
-var uuid = require('node-uuid');
-var request = require('supertest');
+const bull = require('bull');
+const chai = require('chai');
+const expect = chai.expect;
+const Promise = require('bluebird');
+const Redis = require('ioredis');
+const uuid = require('node-uuid');
+const request = require('supertest');
 
-var client = new Redis();
+const redisOpts = {
+  redis: {
+    db: 7
+  }
+};
 
-function cleanSlate() {
-  return client.keys('bull:*').then(function(keys) {
+const client = new Redis({ db: redisOpts.redis.db });
+
+
+function cleanSlate () {
+  return client.keys('bull:*').then(keys => {
     if (keys.length) {
       return client.del(keys);
     }
   });
 }
 
-function createQueue(name) {
-  return new bull(name);
+function createQueue (name) {
+  return new bull(name, redisOpts);
 }
 
-function buildQueue(name) {
-  var q = createQueue(name ? name : uuid());
-  var promises = [];
-  var i;
+function buildQueue (name) {
+  const q = createQueue(name ? name : uuid());
+  const promises = [];
+  let i;
   for (i = 0; i < 20; i++) {
     promises.push(q.add({
       foo: 'bar'
@@ -33,71 +39,56 @@ function buildQueue(name) {
   return Promise.all(promises).return(q);
 }
 
-function resetData() {
-  return cleanSlate().then(function() {
-    var promises = [];
-    var i;
-    for (i = 0; i < 5; i++) {
-      promises.push(buildQueue());
-    }
-    promises.push(buildQueue('test queue'));
-    return Promise.all(promises);
-  });
-}
+const Toureiro = require('../lib/toureiro');
+const Job = require('../lib/models/job');
 
-var Toureiro = require('../lib/toureiro');
-var Queue = require('../lib/models/queue');
-var Job = require('../lib/models/job');
+const app = Toureiro(redisOpts);
 
-var app = Toureiro({
-  redis: {
-    db: 7
-  }
-});
+describe('Server', () => {
 
-describe('Server', function() {
+  describe('Rerun Job', () => {
 
-  describe('Rerun Job', function() {
+    describe('Completed', () => {
 
-    describe('Completed', function() {
+      let q;
 
-      var q;
-
-      beforeEach(function(done) {
-        cleanSlate().then(function() {
-          buildQueue('rerun-completed').then(function(_q) {
+      beforeEach(done => {
+        cleanSlate().then(() => {
+          buildQueue('rerun-completed').then(_q => {
             q = _q;
-            q.process(function(job) {});
-            setTimeout(function() {
+            q.process((job, cb) => {
+              return cb();
+            });
+            setTimeout(() => {
               done();
             }, 1000);
           });
         });
       });
 
-      it('should be able to rerun completed jobs', function(done) {
-        Job.fetch('rerun-completed', 'completed', 0, 1).then(function(jobs) {
+      it('should be able to rerun completed jobs', done => {
+        Job.fetch('rerun-completed', 'completed', 0, 1).then(jobs => {
           expect(jobs).to.be.an('array');
           expect(jobs.length).to.equal(1);
-          var job = jobs[0];
+          const job = jobs[0];
           request(app)
             .post('/job/rerun')
             .set('Accept', 'application/json')
             .send({
               queue: 'rerun-completed',
-              id: job.jobId
+              id: job.id
             })
             .expect(200)
-            .end(function(err, res) {
+            .end((err, res) => {
               if (err) {
                 done(err);
-                return
+                return;
               }
               expect(res.body.status).to.equal('OK');
               expect(res.body.job).to.exist;
-              expect(res.body.job.id).to.not.equal(job.jobId);
-              setTimeout(function() {
-                Job.get('rerun-completed', res.body.job.id).then(function(job) {
+              expect(res.body.job.id).to.not.equal(job.id);
+              setTimeout(() => {
+                Job.get('rerun-completed', res.body.job.id).then(job => {
                   expect(job).to.exist;
                   expect(job.state).to.equal('completed');
                   done();
@@ -109,49 +100,49 @@ describe('Server', function() {
 
     });
 
-    describe('Failed', function() {
+    describe('Failed', () => {
 
-      var q;
+      let q;
 
-      beforeEach(function(done) {
-        cleanSlate().then(function() {
-          buildQueue('rerun-failed').then(function(_q) {
+      beforeEach(done => {
+        cleanSlate().then(() => {
+          buildQueue('rerun-failed').then(_q => {
             q = _q;
-            q.process(function(job) {
-              if (job.jobId <= 20) {
+            q.process(job => {
+              if (job.id <= 20) {
                 throw new Error('doomed!');
               }
             });
-            setTimeout(function() {
+            setTimeout(() => {
               done();
             }, 1000);
           });
         });
       });
 
-      it('should be able to rerun failed jobs', function(done) {
-        Job.fetch('rerun-failed', 'failed', 0, 1).then(function(jobs) {
+      it('should be able to rerun failed jobs', done => {
+        Job.fetch('rerun-failed', 'failed', 0, 1).then(jobs => {
           expect(jobs).to.be.an('array');
           expect(jobs.length).to.equal(1);
-          var job = jobs[0];
+          const job = jobs[0];
           request(app)
             .post('/job/rerun')
             .set('Accept', 'application/json')
             .send({
               queue: 'rerun-failed',
-              id: job.jobId
+              id: job.id
             })
             .expect(200)
-            .end(function(err, res) {
+            .end((err, res) => {
               if (err) {
                 done(err);
-                return
+                return;
               }
               expect(res.body.status).to.equal('OK');
               expect(res.body.job).to.exist;
-              expect(res.body.job.id).to.not.equal(job.jobId);
-              setTimeout(function() {
-                Job.get('rerun-failed', res.body.job.id).then(function(job) {
+              expect(res.body.job.id).to.not.equal(job.id);
+              setTimeout(() => {
+                Job.get('rerun-failed', res.body.job.id).then(job => {
                   expect(job).to.exist;
                   expect(job.state).to.equal('completed');
                   done();

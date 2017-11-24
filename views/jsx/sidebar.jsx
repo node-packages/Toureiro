@@ -1,7 +1,8 @@
 var React = require('react');
 var $ = require('jquery');
 
-ToureiroSidebar = React.createClass({
+var createReactClass = require('create-react-class');
+ToureiroSidebar = createReactClass({
 
   pollTimer: undefined,
 
@@ -9,7 +10,8 @@ ToureiroSidebar = React.createClass({
     var state = {
       queues: [],
       queue: undefined,
-      category: undefined
+      category: undefined,
+      readonly : true
     };
     return state;
   },
@@ -95,6 +97,17 @@ ToureiroSidebar = React.createClass({
     });
   },
 
+  toggleReadonly : function (event) {
+    var _this = this;
+    this.setState({
+      readonly: !this.state.readonly
+    }, function () {
+      if (_this.props.onReadonlyChange) {
+        _this.props.onReadonlyChange();
+      }
+    });
+  },
+
   render: function () {
     var _this = this;
     return (
@@ -134,7 +147,7 @@ ToureiroSidebar = React.createClass({
         </div>
         <div className="sidebar-controls">
           <div>
-            <input id="readonly" type="checkbox" name="readonly" checkedLink={this.props.readonlyLink}/> <label
+            <input type="checkbox" name="readonly" onChange={_this.toggleReadonly} checked={this.state.readonly}/> <label
             htmlFor="readonly">ReadOnly</label>
           </div>
         </div>

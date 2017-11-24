@@ -1,14 +1,20 @@
 var React = require('react');
+var ReactDOM = require('react-dom');
 var $ = require('jquery');
 var moment = require('moment-timezone');
 var hljs = require('highlight.js');
 
 var Pagination = require('./pagination.jsx');
+var createReactClass = require('create-react-class');
 
-var Job = React.createClass({
+var Job = createReactClass({
 
   componentDidMount: function () {
-    hljs.highlightBlock(this.refs.code.getDOMNode());
+    hljs.highlightBlock(this.refs.code);
+  },
+
+  componentDidUpdate :  function () {
+    hljs.highlightBlock(this.refs.code);
   },
 
   promoteJob: function () {
@@ -34,25 +40,6 @@ var Job = React.createClass({
     var _this = this;
     if (confirm('Are you sure you want to remove job ' + this.props.job.id + '? This action is not reversible.')) {
       $.post('job/remove/', {
-        queue: this.props.queue,
-        id: this.props.job.id
-      }, function (response) {
-        if (response.status === 'OK') {
-          if (_this.props.onJobUpdate) {
-            _this.props.onJobUpdate();
-          }
-        } else {
-          console.log(response);
-          alert(response.message);
-        }
-      });
-    }
-  },
-
-  forceRemoveJob : function () {
-    var _this = this;
-    if (confirm('Are you sure you want to force remove job ' + this.props.job.id + '? This action is not reversible.')) {
-      $.post('job/force_remove/', {
         queue: this.props.queue,
         id: this.props.job.id
       }, function (response) {
@@ -158,13 +145,6 @@ var Job = React.createClass({
               </div>
             )
           }
-          {
-            this.props.readonly ? '' : (
-              <div>
-                <a className="job-remove" href="javascript:;" onClick={this.forceRemoveJob}>Force Remove Job</a>
-              </div>
-            )
-          }
           <br />
           <br />
         </div>
@@ -177,7 +157,7 @@ var Job = React.createClass({
 
 });
 
-var JobDetails = React.createClass({
+var JobDetails = createReactClass({
 
   getInitialState: function () {
     var state = {
@@ -195,7 +175,7 @@ var JobDetails = React.createClass({
 
   getJobById: function () {
     var _this = this;
-    var id = $(this.refs.idField.getDOMNode()).val()
+    var id = $(this.refs.idField).val()
     if (id) {
       $.get('/job/', {
         queue: this.props.queue,
@@ -252,7 +232,7 @@ var JobDetails = React.createClass({
 
 });
 
-var ToureiroJobs = React.createClass({
+var ToureiroJobs = createReactClass({
 
   getInitialState: function () {
     var state = {
