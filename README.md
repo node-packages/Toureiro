@@ -1,4 +1,4 @@
-# Toureiro
+# Toureiro [![Build Status](https://travis-ci.org/node-packages/Toureiro.svg?branch=master)](https://travis-ci.org/node-packages/Toureiro)
 
 
 A graphical monitoring interface for the distributed job queue [bull](https://github.com/OptimalBits/bull) built using `express` and `react`. Toureiro provides simple monitoring features as well as the ability to promote delayed jobs directly.
