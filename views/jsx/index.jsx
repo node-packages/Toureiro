@@ -3,11 +3,10 @@ const ReactDOM = require('react-dom');
 const $ = require('jquery');
 
 const Sidebar = require('./sidebar.jsx');
-const Jobs = require('./jobs.jsx').Jobs;
-const JobDetails = require('./jobs.jsx').JobDetails;
+const { Jobs, JobDetails } = require('./jobs.jsx');
 
 class Toureiro extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       queue: undefined,
@@ -67,6 +66,6 @@ class Toureiro extends React.Component {
       </div>
     );
   }
-};
+}
 
-ReactDOM.render(<Toureiro />, $('#toureiro-wrapper')[0]);
+ReactDOM.render(<Toureiro/>, $('#toureiro-wrapper')[0]);

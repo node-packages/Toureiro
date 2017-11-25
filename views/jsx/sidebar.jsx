@@ -26,7 +26,7 @@ class Sidebar extends React.Component {
       if (_this.state.queue) {
         _this.getQueue(_this.state.queue.name);
       }
-    }, 2000);
+    }, 3000);
   };
 
   listQueues () {
@@ -35,7 +35,7 @@ class Sidebar extends React.Component {
       if (response.status === 'OK') {
         _this.setState({
           queues: response.queues
-        })
+        });
         if (!_this.state.queue && response.queues.length > 0) {
           _this.getQueue(response.queues[0]);
         }
@@ -88,7 +88,7 @@ class Sidebar extends React.Component {
     }
   };
 
-  changeCategory (key, event) {
+  changeCategory (key) {
     const _this = this;
     this.setState({
       category: key
@@ -99,7 +99,7 @@ class Sidebar extends React.Component {
     });
   };
 
-  toggleReadonly (event) {
+  toggleReadonly () {
     const _this = this;
     this.setState({
       readonly: !this.state.readonly

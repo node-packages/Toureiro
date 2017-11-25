@@ -1,5 +1,4 @@
 const React = require('react');
-const ReactDOM = require('react-dom');
 const $ = require('jquery');
 const moment = require('moment-timezone');
 const hljs = require('highlight.js');
@@ -158,7 +157,7 @@ class Job extends React.Component {
     );
   }
 
-};
+}
 
 class JobDetails extends React.Component {
 
@@ -183,7 +182,7 @@ class JobDetails extends React.Component {
     const _this = this;
     const id = $(this.refs.idField).val();
     if (id) {
-      $.get('/job/', {
+      $.get('job/', {
         queue: this.props.queue,
         id: id
       }, response => {
@@ -302,7 +301,7 @@ class Jobs extends React.Component {
     this.fetchJobs();
   };
 
-  getJobId (job) {
+  static getJobId (job) {
     // get job id
     let opts;
     try {
@@ -326,7 +325,7 @@ class Jobs extends React.Component {
         <div ref="jobs">
           {
             this.state.jobs.map(job => (
-              <Job key={_this.getJobId(job)} job={job} queue={_this.props.queue} onJobUpdate={_this.handleJobUpdate}
+              <Job key={Jobs.getJobId(job)} job={job} queue={_this.props.queue} onJobUpdate={_this.handleJobUpdate}
                    enablePromote={_this.props.category === 'delayed'} readonly={_this.props.readonly}/>
             ))
           }
@@ -336,7 +335,6 @@ class Jobs extends React.Component {
       </div>
     );
   }
-
-};
+}
 
 module.exports = { JobDetails, Jobs };
