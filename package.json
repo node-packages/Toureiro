@@ -32,7 +32,7 @@
   "dependencies": {
     "bluebird": "3.5.x",
     "body-parser": "1.18.x",
-    "bull": "^3.3.8",
+    "bull": "^3.3.9",
     "compression": "1.7.1",
     "connect-slashes": "1.3.x",
     "express": "4.16.x",
@@ -46,8 +46,8 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "babelify": "8.0.0",
-    "bootstrap": "3.3.x",
-    "browserify": "15.1.x",
+    "bootstrap": "4.0.x",
+    "browserify": "15.2.x",
     "chai": "4.1.x",
     "classnames": "2.2.x",
     "gulp": "3.9.x",
@@ -57,12 +57,12 @@
     "gulp-livereload": "3.8.x",
     "gulp-notify": "3.2.x",
     "gulp-shell": "0.6.5",
-    "gulp-sourcemaps": "2.6.3",
+    "gulp-sourcemaps": "2.6.4",
     "gulp-uglify": "3.0.x",
     "gulp-util": "3.0.x",
     "highlight.js": "9.12.x",
-    "jquery": "3.2.x",
-    "mocha": "^4.1.0",
+    "jquery": "3.3.x",
+    "mocha": "^5.0.0",
     "moment-timezone": "0.5.x",
     "node-uuid": "1.4.x",
     "react": "^16.2.0",
@@ -70,7 +70,7 @@
     "supertest": "3.0.x",
     "vinyl-buffer": "1.0.1",
     "vinyl-source-stream": "2.0.x",
-    "watchify": "3.9.x"
+    "watchify": "3.10.x"
   },
   "bin": {
     "toureiro": "./bin/toureiro.js"
