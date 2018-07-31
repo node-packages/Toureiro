@@ -1,7 +1,7 @@
 const React = require('react');
 const $ = require('jquery');
 const moment = require('moment-timezone');
-const { Highlight } = require( 'react-fast-highlight');
+const { Highlight } = require('react-fast-highlight');
 const work = require('webworkify');
 const Worker = work(require('../js/worker'));
 
@@ -146,7 +146,7 @@ class Job extends React.Component {
           <br/>
         </div>
         <Highlight
-          languages={['json', 'js']}
+          languages={['json']}
           worker={Worker}
           className="job-code"
         >
