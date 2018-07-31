@@ -1,6 +1,6 @@
 {
   "name": "toureiro-next",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "A graphic interface for bull.",
   "main": "index.js",
   "scripts": {
