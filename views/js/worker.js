@@ -14,6 +14,6 @@ module.exports = function (self) {
       result = hjs.highlightAuto(code, languages);
     }
 
-    postMessage(result);
+    self.postMessage(result);
   });
 };
