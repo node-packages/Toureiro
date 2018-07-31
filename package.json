@@ -60,17 +60,18 @@
     "gulp-sourcemaps": "2.6.4",
     "gulp-uglify": "3.0.x",
     "gulp-util": "3.0.x",
-    "highlight.js": "9.12.x",
     "jquery": "3.3.x",
     "mocha": "^5.2.0",
     "moment-timezone": "0.5.x",
     "node-uuid": "1.4.x",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "react-fast-highlight": "2.2.2",
     "supertest": "3.1.x",
     "vinyl-buffer": "1.0.1",
     "vinyl-source-stream": "2.0.x",
-    "watchify": "3.11.x"
+    "watchify": "3.11.x",
+    "webworkify": "1.5.0"
   },
   "bin": {
     "toureiro": "./bin/toureiro.js"

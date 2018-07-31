@@ -1,7 +1,10 @@
 const React = require('react');
 const $ = require('jquery');
 const moment = require('moment-timezone');
-const hljs = require('highlight.js');
+const { Highlight } = require( 'react-fast-highlight');
+const work = require('webworkify');
+const Worker = work(require('../js/worker'));
+
 
 const Pagination = require('./pagination.jsx');
 
@@ -10,14 +13,6 @@ class Job extends React.Component {
   constructor (props) {
     super(props);
   }
-
-  componentDidMount () {
-    hljs.highlightBlock(this.refs.code);
-  };
-
-  componentDidUpdate () {
-    hljs.highlightBlock(this.refs.code);
-  };
 
   promoteJob () {
     const _this = this;
@@ -150,9 +145,13 @@ class Job extends React.Component {
           <br/>
           <br/>
         </div>
-        <pre className="job-code">
-          <code ref="code" dangerouslySetInnerHTML={{ __html: JSON.stringify(job, null, 2) }}/>
-        </pre>
+        <Highlight
+          languages={['json', 'js']}
+          worker={Worker}
+          className="job-code"
+        >
+          {JSON.stringify(job, null, 2)}
+        </Highlight>
       </div>
     );
   }
