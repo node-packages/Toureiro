@@ -12,6 +12,10 @@ class Job extends React.Component {
 
   constructor (props) {
     super(props);
+
+    this.promoteJob = this.promoteJob.bind(this);
+    this.rerunJob = this.rerunJob.bind(this);
+    this.removeJob = this.removeJob.bind(this);
   }
 
   promoteJob () {
