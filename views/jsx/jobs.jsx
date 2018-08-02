@@ -325,6 +325,8 @@ class Jobs extends React.Component {
     return (
       <div className="toureiro-jobs">
         <h4 className="header">{this.props.category[0].toUpperCase() + this.props.category.slice(1)} Jobs</h4>
+        <Pagination ref="pagination" total={Math.ceil(this.state.total / this.state.limit)}
+                    onPageChange={this.handlePageChange}/>
         <div ref="jobs">
           {
             this.state.jobs.map(job => (
@@ -333,8 +335,6 @@ class Jobs extends React.Component {
             ))
           }
         </div>
-        <Pagination ref="pagination" total={Math.ceil(this.state.total / this.state.limit)}
-                    onPageChange={this.handlePageChange}/>
       </div>
     );
   }
