@@ -1,9 +1,11 @@
 const React = require('react');
 const $ = require('jquery');
 const moment = require('moment-timezone');
-const { Highlight } = require('react-fast-highlight');
+import BareHighlight from 'react-fast-highlight/lib/BareHighlight';
+const stringify = require('json-stable-stringify');
 const work = require('webworkify');
 const Worker = work(require('../js/worker'));
+const { hljs} = require('../js/hljs');
 
 
 const Pagination = require('./pagination.jsx');
@@ -149,13 +151,14 @@ class Job extends React.Component {
           <br/>
           <br/>
         </div>
-        <Highlight
+        <BareHighlight
           languages={['json']}
+          highlightjs={hljs}
           worker={Worker}
           className="job-code"
         >
-          {JSON.stringify(job, null, 2)}
-        </Highlight>
+          {stringify(job, { space: '  ' })}
+        </BareHighlight>
       </div>
     );
   }

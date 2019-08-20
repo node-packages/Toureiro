@@ -111,7 +111,7 @@ describe('Models', () => {
 
     });
 
-    describe('`active`', () => {
+    describe('`active 1`', () => {
 
       beforeEach(() => cleanSlate().then(() => buildQueue('active').then(q => {
         Promise.join(
@@ -126,8 +126,21 @@ describe('Models', () => {
       it('#total()', () => Job.total('active', 'active').then(total => {
         expect(total).to.equal(5);
       }));
+    });
 
-      it('#fetch()', () => Job.fetch('active', 'active', 1, 3).then(jobs => {
+    describe('`active 2`', () => {
+
+      beforeEach(() => cleanSlate().then(() => buildQueue('active2').then(q => {
+        Promise.join(
+          q.getNextJob(),
+          q.getNextJob(),
+          q.getNextJob(),
+          q.getNextJob(),
+          q.getNextJob()
+        );
+      })));
+
+      it('#fetch()', () => Job.fetch('active2', 'active', 1, 3).then(jobs => {
         expect(jobs).to.be.an('array');
         expect(jobs.length).to.equal(3);
         const ids = [2, 3, 4];

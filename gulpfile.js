@@ -32,12 +32,13 @@ const runLessMin = function () {
 gulp.task('less', runLess);
 gulp.task('lessMin', runLessMin);
 
-gulp.task('buildBundle', function () {
+gulp.task('buildDevBundle', function () {
   const bundler = browserify({
     entries: './views/jsx/index.jsx',
     debug: true,
+    fullPaths:true,
     transform: babelify.configure({
-      presets: ['es2015', 'react']
+      presets: ["@babel/preset-env", "@babel/preset-react"]
     }),
   });
   return bundler.bundle()
@@ -49,12 +50,26 @@ gulp.task('buildBundle', function () {
     .pipe(gulp.dest('./public/js/'));
 });
 
+gulp.task('buildProdBundle', function () {
+  const bundler = browserify({
+    entries: './views/jsx/index.jsx',
+    transform: babelify.configure({
+      presets: ["@babel/preset-env", "@babel/preset-react"]
+    }),
+  });
+  return bundler.bundle()
+    .pipe(source('app.js'))
+    .pipe(buffer())
+    .pipe(uglify().on('error', gutil.log))
+    .pipe(gulp.dest('./public/js/'));
+});
+
 function watchBundle () {
   const watcher = watchify(browserify({
     entries: './views/jsx/index.jsx',
     debug: true,
     transform: babelify.configure({
-      presets: ['es2015', 'react']
+      presets: ["@babel/preset-env", "@babel/preset-react"]
     }),
     cache: {},
     packageCache: {},
@@ -104,4 +119,5 @@ gulp.task('dev', [
   'server'
 ]);
 
-gulp.task('build', ['buildBundle', 'lessMin']);
+gulp.task('build-prod', ['buildProdBundle', 'lessMin']);
+gulp.task('build-dev', ['buildDevBundle', 'lessMin']);
