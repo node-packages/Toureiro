@@ -13,26 +13,22 @@ const uglify = require('gulp-uglify');
 const gutil = require('gulp-util');
 const watchify = require('watchify');
 
-const runLess = function () {
-  return gulp
-    .src('./views/css/toureiro.less')
-    .pipe(less())
-    .pipe(gulp.dest('./public/dev/css'))
-    .pipe(livereload());
-};
+const runLess = () => gulp
+  .src('./views/css/toureiro.less')
+  .pipe(less())
+  .pipe(gulp.dest('./public/dev/css'))
+  .pipe(livereload());
 
-const runLessMin = function () {
-  return gulp
-    .src('./views/css/toureiro.less')
-    .pipe(less())
-    .pipe(cssmin())
-    .pipe(gulp.dest('./public/css'));
-};
+const runLessMin = () => gulp
+  .src('./views/css/toureiro.less')
+  .pipe(less())
+  .pipe(cssmin())
+  .pipe(gulp.dest('./public/css'));
 
-gulp.task('less', runLess);
-gulp.task('lessMin', runLessMin);
+gulp.task('less', gulp.series(runLess));
+gulp.task('lessMin', gulp.series(runLessMin));
 
-gulp.task('buildDevBundle', function () {
+gulp.task('buildDevBundle', gulp.series(() => {
   const bundler = browserify({
     entries: './views/jsx/index.jsx',
     debug: true,
@@ -48,9 +44,9 @@ gulp.task('buildDevBundle', function () {
     .pipe(uglify().on('error', gutil.log))
     .pipe(sourcemaps.write())
     .pipe(gulp.dest('./public/js/'));
-});
+}));
 
-gulp.task('buildProdBundle', function () {
+gulp.task('buildProdBundle', gulp.series(() => {
   const bundler = browserify({
     entries: './views/jsx/index.jsx',
     transform: babelify.configure({
@@ -62,7 +58,7 @@ gulp.task('buildProdBundle', function () {
     .pipe(buffer())
     .pipe(uglify().on('error', gutil.log))
     .pipe(gulp.dest('./public/js/'));
-});
+}));
 
 function watchBundle () {
   const watcher = watchify(browserify({
@@ -75,7 +71,7 @@ function watchBundle () {
     packageCache: {},
     fullPaths: true
   }));
-  watcher.on('update', function () {
+  watcher.on('update', () => {
     bundle(watcher);
   });
   watcher.on('log', gutil.log);
@@ -92,32 +88,32 @@ function bundle (bundler) {
     .pipe(buffer())
     .pipe(gulp.dest('./public/dev/js/'))
     .pipe(livereload())
-    .pipe(notify(function () {
+    .pipe(notify(() => {
       console.log('Bundled! Process took', (Date.now() - start) + 'ms');
     }));
 }
 
-gulp.task('watchBundle', watchBundle);
-gulp.task('watchLess', function () {
+gulp.task('watchBundle', gulp.series(watchBundle));
+gulp.task('watchLess', gulp.series(() => {
   runLess();
   gulp.watch('./views/css/**/*.less', ['less']);
-});
+}));
 
-gulp.task('watch', ['watchBundle', 'watchLess']);
+gulp.task('watch', gulp.parallel('watchBundle', 'watchLess'));
 
-gulp.task('livereload', function () {
+gulp.task('livereload', gulp.series(() => {
   livereload.listen();
-});
+}));
 
-gulp.task('server', shell.task([
+gulp.task('server', gulp.series(shell.task([
   'nodemon -w ./lib ./server.js'
-]));
+])));
 
-gulp.task('dev', [
+gulp.task('dev', gulp.parallel(
   'livereload',
   'watch',
   'server'
-]);
+));
 
-gulp.task('build-prod', ['buildProdBundle', 'lessMin']);
-gulp.task('build-dev', ['buildDevBundle', 'lessMin']);
+gulp.task('build-prod', gulp.parallel('buildProdBundle', 'lessMin'));
+gulp.task('build-dev', gulp.parallel('buildDevBundle', 'lessMin'));
