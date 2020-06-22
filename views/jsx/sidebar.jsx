@@ -131,7 +131,7 @@ class Sidebar extends React.Component {
             (_this.state.queue) ? (
               ['active', 'wait', 'delayed', 'completed', 'failed'].map(key => (
                 <div key={key} className="sidebar-stat">
-                  <a href="javascript:;" onClick={_this.changeCategory.bind(_this, key)}>
+                  <a href="#" onClick={_this.changeCategory.bind(_this, key)}>
                     {key[0].toUpperCase() + key.slice(1)} : <span
                     className="badge">{_this.state.queue.stats[key]}</span>
                   </a>
@@ -140,7 +140,7 @@ class Sidebar extends React.Component {
             ) : ''
           }
           <div className="sidebar-stat">
-            <a href="javascript:;" onClick={_this.changeCategory.bind(_this, 'job')}>Job Details</a>
+            <a href="#" onClick={_this.changeCategory.bind(_this, 'job')}>Job Details</a>
           </div>
         </div>
         <div className="sidebar-controls">

@@ -96,7 +96,7 @@ function bundle (bundler) {
 gulp.task('watchBundle', gulp.series(watchBundle));
 gulp.task('watchLess', gulp.series(() => {
   runLess();
-  gulp.watch('./views/css/**/*.less', ['less']);
+  gulp.watch('./views/css/**/*.less', gulp.series('less'));
 }));
 
 gulp.task('watch', gulp.parallel('watchBundle', 'watchLess'));

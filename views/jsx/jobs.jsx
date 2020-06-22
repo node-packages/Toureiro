@@ -1,11 +1,11 @@
 const React = require('react');
 const $ = require('jquery');
 const moment = require('moment-timezone');
-import BareHighlight from 'react-fast-highlight/lib/BareHighlight';
+import BareHighlight from 'react-fast-highlight/lib/js/BareHighlight';
 const stringify = require('json-stable-stringify');
 const work = require('webworkify');
 const Worker = work(require('../js/worker'));
-const { hljs} = require('../js/hljs');
+const { hljs } = require('../js/hljs');
 
 
 const Pagination = require('./pagination.jsx');
@@ -137,14 +137,14 @@ class Job extends React.Component {
           {
             this.props.readonly || (job.state !== 'completed' && job.state !== 'failed') ? '' : (
               <div>
-                <a className="job-rerun" href="javascript:;" onClick={this.rerunJob}>Rerun Job</a>
+                <a className="job-rerun" href="#" onClick={this.rerunJob}>Rerun Job</a>
               </div>
             )
           }
           {
             this.props.readonly ? '' : (
               <div>
-                <a className="job-remove" href="javascript:;" onClick={this.removeJob}>Remove Job</a>
+                <a className="job-remove" href="#" onClick={this.removeJob}>Remove Job</a>
               </div>
             )
           }
@@ -176,6 +176,7 @@ class JobDetails extends React.Component {
 
     this.handleJobSearch = this.handleJobSearch.bind(this);
     this.getJobById = this.getJobById.bind(this);
+    this.idField = null;
   }
 
   handleJobSearch (event) {
@@ -186,7 +187,7 @@ class JobDetails extends React.Component {
 
   getJobById () {
     const _this = this;
-    const id = $(this.refs.idField).val();
+    const id = $(_this.idField).val();
     if (id) {
       $.get('job/', {
         queue: this.props.queue,
@@ -214,13 +215,14 @@ class JobDetails extends React.Component {
   };
 
   render () {
+    let idRef = (el) => this.idField = el;
     return (
       <div className="toureiro-jobs">
         <h4 className="header">Job Details</h4>
         <div>
           <label>Find Job by ID: </label>
           <div className="input-group">
-            <input ref="idField" className="form-control" type="text" name="id" onKeyUp={this.handleJobSearch}/>
+            <input ref={idRef} className="form-control" type="text" name="id" onKeyUp={this.handleJobSearch}/>
             <span className="input-group-btn">
               <button className="btn btn-success" onClick={this.getJobById}>Go</button>
             </span>
@@ -254,11 +256,12 @@ class Jobs extends React.Component {
     };
     this.handlePageChange = this.handlePageChange.bind(this);
     this.handleJobUpdate = this.handleJobUpdate.bind(this);
+    this.pagination = null;
   }
 
   componentDidUpdate () {
-    if (this.state.page !== this.refs.pagination.state.page) {
-      this.refs.pagination.setState({
+    if (this.state.page !== this.pagination.state.page) {
+      this.pagination.setState({
         page: this.state.page
       });
     }
@@ -325,10 +328,11 @@ class Jobs extends React.Component {
 
   render () {
     const _this = this;
+    let pageRef = (el) => this.pagination = el;
     return (
       <div className="toureiro-jobs">
         <h4 className="header">{this.props.category[0].toUpperCase() + this.props.category.slice(1)} Jobs</h4>
-        <Pagination ref="pagination" total={Math.ceil(this.state.total / this.state.limit)}
+        <Pagination ref={pageRef} total={Math.ceil(this.state.total / this.state.limit)}
                     onPageChange={this.handlePageChange}/>
         <div ref="jobs">
           {

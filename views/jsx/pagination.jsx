@@ -54,7 +54,7 @@ class Pagination extends React.Component {
       <div className="pagination">
         <ul>
           <li className="previous">
-            <a href="javascript:" className="fui-arrow-left" onClick={_this.stepPage.bind(_this, -1)}>«</a>
+            <a href="#" className="fui-arrow-left" onClick={_this.stepPage.bind(_this, -1)}>«</a>
           </li>
           {
             pages.map(function (page) {
@@ -64,20 +64,20 @@ class Pagination extends React.Component {
               if ([0, _this.props.total - 1, _this.state.page, _this.state.page - 1, _this.state.page + 1].indexOf(page) !== -1) {
                 return (
                   <li className={pageClasses} key={page}>
-                    <a href="javascript:" onClick={_this.changePage.bind(_this, page)}>{page + 1}</a>
+                    <a href="#" onClick={_this.changePage.bind(_this, page)}>{page + 1}</a>
                   </li>
                 );
               } else if ((page === _this.state.page - 2 && page !== 0) || (page === _this.state.page + 2 && page !== _this.props.total - 1)) {
                 return (
                   <li className="disabled" key={page}>
-                    <a href="javascript:">..</a>
+                    <a href="#">..</a>
                   </li>
                 );
               }
             })
           }
           <li className="next">
-            <a href="javascript:" className="fui-arrow-right" onClick={_this.stepPage.bind(_this, 1)}>»</a>
+            <a href="#" className="fui-arrow-right" onClick={_this.stepPage.bind(_this, 1)}>»</a>
           </li>
         </ul>
       </div>

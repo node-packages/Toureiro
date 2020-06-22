@@ -16,6 +16,8 @@ module.exports = function (self) {
       result = hljs.highlightAuto(code, languages);
     }
 
-    self.postMessage(result);
+    const { language, value } = result;
+
+    self.postMessage({ language, value });
   });
 };
