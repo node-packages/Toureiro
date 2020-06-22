@@ -95,3 +95,4 @@ typings/
 .idea/
 views/
 tests/
+public/dev
